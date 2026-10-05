@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.validators import MinValueValidator
 # Create your models here.
 from django.db import models
 
@@ -17,7 +17,7 @@ class Vehicule(models.Model):
         unique=True
     )
 
-    capacite_kg = models.PositiveIntegerField()
+    capacite_kg = models.PositiveIntegerField(validators=[MinValueValidator(1,"La capacite doit etre superieure a 0 kg.")])
 
     type_vehicule = models.CharField(
         max_length=30,
