@@ -1,6 +1,8 @@
 from django.db import models
 import uuid
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
+from decimal import Decimal
 from django.utils import timezone
 
 
@@ -21,7 +23,7 @@ class Expedition(models.Model):
     ville_depart = models.CharField(max_length=100)
     ville_arrivee = models.CharField(max_length=100)
 
-    poids_kg = models.DecimalField(max_digits=10, decimal_places=2)
+    poids_kg = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'), message="Le poids doit etre superieur a 0.")])
 
     date_souhaitee = models.DateField()
     description = models.TextField(blank=True)

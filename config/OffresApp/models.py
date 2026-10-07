@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.validators import MinValueValidator
+from decimal import Decimal
 
 # Create your models here.
 
@@ -11,9 +13,9 @@ class Offre(models.Model):
         ('retiree', 'Retirée'),
     ]
 
-    prix = models.DecimalField(max_digits=10, decimal_places=2)
+    prix = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
 
-    delai_jours = models.PositiveIntegerField()
+    delai_jours = models.PositiveIntegerField(validators=[MinValueValidator(1)])
 
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='proposee')
 

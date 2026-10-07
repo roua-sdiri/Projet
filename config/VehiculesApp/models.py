@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
+
 # Create your models here.
 from django.db import models
 
@@ -31,6 +33,16 @@ class Vehicule(models.Model):
         on_delete=models.CASCADE,
         related_name='vehicules'
     )
+
+
+def clean(self):
+    super().clean()
+
+    if self.entreprise and self.entreprise.type_entreprise != 'transporteur':
+        raise ValidationError({
+            'entreprise': "L'entreprise du véhicule doit être de type transporteur."
+        })
+
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

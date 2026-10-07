@@ -12,7 +12,7 @@ def validate_email(value):
 
 # Create your models here.
 class Utilisateur(AbstractUser):
-    user_id = models.CharField(max_length=8, primary_key=True, editable=False)
+    user_id = models.CharField(max_length=8, primary_key=True, editable=False, validators=[RegexValidator(regex=r'^AUser\d{2}$', message="Le id doit respecter le format.")])
     email = models.EmailField(unique=True, validators=[validate_email])
     telephone = models.CharField(max_length=15, null=True, blank=True)
     role = models.CharField(max_length=100, choices=[('chargeur', 'Chargeur'), ('transporteur', 'Transporteur'), ('administrateur', 'Administrateur')] , default='chargeur')
