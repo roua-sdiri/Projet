@@ -41,14 +41,15 @@ class Expedition(models.Model):
 
 
     @classmethod
+
     def _generate_reference(cls):
         annee = timezone.now().strftime('%y')
 
-        dernier = cls.objects.filter(reference_startswith=f"EXP_{annee}_").order_by('-reference').first()
+        dernier = cls.objects.filter(reference__startswith=f"EXP_{annee}_").order_by('-reference').first()
 
-        compteur= int(dernier.reference[-5:]) +1 if dernier else 1 
+        compteur = int(dernier.reference[-5:]) + 1 if dernier else 1
 
-        if compteur > 99999 :
+        if compteur > 99999:
             raise ValidationError("Limit exceeded")
         return f"EXP_{annee}_{compteur:05d}"
 
@@ -64,4 +65,5 @@ class Expedition(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    
+    def __str__(self):
+        return f"{self.reference}"

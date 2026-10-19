@@ -16,8 +16,22 @@ class Utilisateur(AbstractUser):
     email = models.EmailField(unique=True, validators=[validate_email])
     telephone = models.CharField(max_length=15, null=True, blank=True)
     role = models.CharField(max_length=100, choices=[('chargeur', 'Chargeur'), ('transporteur', 'Transporteur'), ('administrateur', 'Administrateur')] , default='chargeur')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.user_id:
+            last_user = Utilisateur.objects.order_by('-user_id').first()
+
+            if last_user:
+                last_number = int(last_user.user_id.replace('AUser', ''))
+                new_number = last_number + 1
+            else:
+                new_number = 1
+
+            self.user_id = f'AUser{new_number:02d}'
+
+        super().save(*args, **kwargs)
 
 
 matricule_fiscal_validator= RegexValidator(regex=r'^\d{7}[/ -]?[A-Za-z][/ -]?[ABDNPEabdnpe][/ -]?[MPCNEmpcne][/ -]\d{3}$', message="Format non conforme")
@@ -34,3 +48,5 @@ class Entreprise(models.Model):
 
     
     gerant = models.OneToOneField(Utilisateur, on_delete=models.CASCADE, related_name='entreprise')
+
+    
