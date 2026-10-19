@@ -1,19 +1,22 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.html import format_html
+
+from OffresApp.models import Offre
 from .models import Expedition
 
 
 class EnRetardFilter(admin.SimpleListFilter):
-    title = 'En retard'
+    title = 'en retard'
     parameter_name = 'en_retard'
 
     def lookups(self, request, model_admin):
-        return [("oui", "Oui"), ("non", "Non")]
+        return [('oui', 'Oui'), ('non', 'Non')]
 
     def queryset(self, request, queryset):
-        aujourd_hui = timezone.localdate()
-        en_retard = Q(statut='publiee', date_souhaitee__lt=aujourd_hui)
+        en_retard = Q(statut='publiee', date_souhaitee__lt=timezone.localdate())
         if self.value() == 'oui':
             return queryset.filter(en_retard)
         if self.value() == 'non':
@@ -21,23 +24,73 @@ class EnRetardFilter(admin.SimpleListFilter):
         return queryset
 
 
+class OffreInline(admin.StackedInline):
+    model = Offre
+    fk_name = 'expedition'
+    extra = 0
+    can_delete = False
+    show_change_link = True
+    readonly_fields = ('transporteur', 'vehicule', 'prix', 'delai_jours', 'statut')
+    fields = ('transporteur', 'vehicule', 'prix', 'delai_jours', 'statut')
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
+@admin.action(description="Clôturer les expéditions sélectionnées")
+def cloturer_expeditions(modeladmin, request, queryset):
+    traitees = ignorees = erreurs = 0
+    for expedition in queryset:
+        if expedition.statut != 'en_cours':
+            ignorees += 1
+            continue
+        expedition.statut = 'livree'
+        try:
+            expedition.full_clean()
+            expedition.save()
+            traitees += 1
+        except ValidationError as e:
+            erreurs += 1
+            modeladmin.message_user(
+                request, f"{expedition.reference} : {'; '.join(e.messages)}", messages.ERROR
+            )
+    modeladmin.message_user(
+        request,
+        f"{traitees} expédition(s) clôturée(s), {ignorees} ignorée(s) (statut ≠ en cours), {erreurs} en erreur.",
+        messages.SUCCESS if traitees else messages.WARNING,
+    )
+
+
 @admin.register(Expedition)
 class ExpeditionAdmin(admin.ModelAdmin):
-    list_display = ('reference', 'ville_depart', 'ville_arrivee', 'statut')
-    list_filter = ('statut', 'ville_depart', 'ville_arrivee', "date_souhaitee", EnRetardFilter)
-    readonly_fields = ('reference', 'created_at', 'updated_at')
-    search_fields = ('reference', 'ville_depart')
+    list_display = ('reference', 'entreprise', 'ville_depart', 'ville_arrivee',
+                    'statut_colore', 'statut', 'date_souhaitee')
+    list_filter = ('statut', 'ville_depart', EnRetardFilter)
+    search_fields = ('reference', 'ville_depart', 'ville_arrivee', 'entreprise__raison_sociale')
+    list_editable = ('statut',)
+    ordering = ('-created_at',)
+    date_hierarchy = 'date_souhaitee'
+    list_per_page = 25
+    autocomplete_fields = ('entreprise',)
+    readonly_fields = ('reference', 'statut_colore', 'created_at', 'updated_at')
+    inlines = [OffreInline]
+    actions = [cloturer_expeditions]
     fieldsets = (
-        ("Expeditions", {
-            "fields": ("reference", "entreprise", "description"),
-        }),
-        ("Itineraire et poids", {
-            "fields": ("ville_depart", "ville_arrivee", "poids_kg", "date_souhaitee"),
-        }),
-        ("Statut et horodatage", {
-            "fields": ("statut", "created_at", "updated_at"),
-            "classes": ("collapse",),
-        }),
+        ("Expédition", {"fields": ("reference", "entreprise", "description")}),
+        ("Itinéraire et poids", {"fields": ("ville_depart", "ville_arrivee", "poids_kg", "date_souhaitee")}),
+        ("Suivi", {"fields": ("statut", "statut_colore", "created_at", "updated_at"),
+                   "classes": ("collapse",)}),
     )
-    
+
+    @admin.display(description='Statut (badge)')
+    def statut_colore(self, obj):
+        couleurs = {
+            'publiee': '#F0AD4E', 'attribuee': '#5BC0DE', 'en_cours': '#337AB7',
+            'livree': '#5CB85C', 'annulee': '#D9534F',
+        }
+        return format_html(
+            '<span style="color:white;background:{};padding:3px 8px;border-radius:4px;">{}</span>',
+            couleurs.get(obj.statut, '#999'), obj.get_statut_display(),
+        )
+
 # admin.site.register(Expedition, ExpeditionAdmin)
