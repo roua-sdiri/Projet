@@ -1,0 +1,42 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div id="content-main">
+    <h1>Tableau de bord d'intégrité</h1>
+
+    <p>
+        Nombre de contrôles : <strong>{{ total_checks }}</strong>
+        |
+        Contrôles avec anomalies :
+        <strong>{{ failed_checks }}</strong>
+    </p>
+
+    {% for check in checks %}
+        <div style="border:1px solid #ccc; padding:15px; margin-bottom:15px;">
+            <h2>{{ check.name }}</h2>
+
+            {% if check.ok %}
+                <p style="color:green; font-weight:bold;">
+                    OK — Aucune anomalie détectée.
+                </p>
+            {% else %}
+                <p style="color:#ba2121; font-weight:bold;">
+                    ANOMALIE — {{ check.count }} problème(s) détecté(s).
+                </p>
+
+                <ul>
+                    {% for error in check.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <p>
+        <a href="{% url 'admin:ExpeditionsApp_expedition_changelist' %}">
+            Retour à la liste des expéditions
+        </a>
+    </p>
+</div>
+{% endblock %}

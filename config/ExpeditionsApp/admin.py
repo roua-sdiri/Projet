@@ -3,6 +3,9 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.html import format_html
+from django.template.response import TemplateResponse
+from django.urls import path
+from .integrity import run_integrity_checks
 
 from OffresApp.models import Offre
 from .models import Expedition
@@ -63,6 +66,36 @@ def cloturer_expeditions(modeladmin, request, queryset):
 
 @admin.register(Expedition)
 class ExpeditionAdmin(admin.ModelAdmin):
+    def get_urls(self):
+        urls = super().get_urls()
+
+        custom_urls = [
+            path(
+                "integrity-dashboard/",
+                self.admin_site.admin_view(self.integrity_dashboard),
+                name="expedition_integrity_dashboard",
+            ),
+        ]
+
+        return custom_urls + urls
+
+    def integrity_dashboard(self, request):
+        checks = run_integrity_checks()
+
+        context = {
+            **self.admin_site.each_context(request),
+            "title": "Tableau de bord d'integrite",
+            "checks": checks,
+            "total_checks": len(checks),
+            "failed_checks": sum(1 for check in checks if not check["ok"]),
+        }
+
+        return TemplateResponse(
+            request,
+            "admin/expeditions_integrity.html",
+            context,
+        )
+    
     list_display = ('reference', 'entreprise', 'ville_depart', 'ville_arrivee',
                     'statut_colore', 'statut', 'date_souhaitee')
     list_filter = ('statut', 'ville_depart', EnRetardFilter)
@@ -81,6 +114,7 @@ class ExpeditionAdmin(admin.ModelAdmin):
         ("Suivi", {"fields": ("statut", "statut_colore", "created_at", "updated_at"),
                    "classes": ("collapse",)}),
     )
+    
 
     @admin.display(description='Statut (badge)')
     def statut_colore(self, obj):
