@@ -15,3 +15,6 @@ def listExpeditions(request):
     expeditions = Expedition.objects.all()
     return render(request, "expedition/liste.html", {'expeditions': expeditions})
 
+def detailExpeditions(request):
+    expeditions = Expedition.objects.all()
+    return render(request, "expedition/detail.html", {'expeditions': expeditions})
