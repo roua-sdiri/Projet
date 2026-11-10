@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Afficher véhicules{% endblock %}
+
+{% block content %}
+<div class="form-page">
+
+    <div class="form-card">
+
+        <h1>Bienvenue {{ name }} !</h1>
+
+        <p>Bienvenue dans la gestion de la flotte TransConnect.</p>
+
+        <a href="{% url 'vehicule:list' %}" class="btn-primary">
+            Voir les véhicules
+        </a>
+
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Véhicule{% endblock %}
+
+{% block content %}
+<div class="form-page">
+
+    <a href="{% url 'vehicule:list' %}">← Retour à la liste</a>
+
+    <div class="form-card">
+
+        <h1>
+            {% if form.instance.pk %}
+                Modifier un véhicule
+            {% else %}
+                Ajouter un véhicule
+            {% endif %}
+        </h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-field">
+
+                    <label>{{ field.label }}</label>
+
+                    {{ field }}
+
+                    {% for error in field.errors %}
+                        <p class="field-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+            {% endfor %}
+
+            <div class="form-actions">
+
+                <a href="{% url 'vehicule:list' %}"
+                   class="btn-secondary">Annuler</a>
+
+                <button type="submit" class="btn-primary">
+                    Enregistrer
+                </button>
+
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

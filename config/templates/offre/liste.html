@@ -1,0 +1,60 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Offres{% endblock %}
+
+{% block content %}
+<div class="form-page">
+
+    <h1>Gestion des offres</h1>
+    <p>Consultez les propositions de transport.</p>
+
+    <a href="{% url 'offre:create' %}" class="btn-primary">
+        + Ajouter une offre
+    </a>
+
+    <div class="form-card">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Expédition</th>
+                    <th>Transporteur</th>
+                    <th>Véhicule</th>
+                    <th>Prix</th>
+                    <th>Délai</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for offre in offres %}
+                <tr>
+                    <td>{{ offre.expedition.reference }}</td>
+                    <td>{{ offre.transporteur }}</td>
+                    <td>{{ offre.vehicule }}</td>
+                    <td>{{ offre.prix }} DT</td>
+                    <td>{{ offre.delai_jours }} jours</td>
+                    <td>{{ offre.get_statut_display }}</td>
+
+                    <td>
+                        <a href="{% url 'offre:detail' offre.pk %}">Détails</a>
+                        |
+                        <a href="{% url 'offre:update' offre.pk %}">Modifier</a>
+                        |
+                        <a href="{% url 'offre:delete' offre.pk %}">Supprimer</a>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="7">Aucune offre enregistrée.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+{% endblock %}

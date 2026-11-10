@@ -1,0 +1,53 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Entreprises{% endblock %}
+
+{% block content %}
+<div class="form-page">
+
+    <h1>Gestion des entreprises</h1>
+    <p>Gérez les entreprises inscrites sur TransConnect.</p>
+
+    <a href="{% url 'entreprise:create' %}" class="btn-primary">
+        + Ajouter une entreprise
+    </a>
+
+    <div class="form-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Raison sociale</th>
+                    <th>Matricule fiscal</th>
+                    <th>Type</th>
+                    <th>Gérant</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for entreprise in entreprises %}
+                <tr>
+                    <td>{{ entreprise.raison_sociale }}</td>
+                    <td>{{ entreprise.matricule_fiscal }}</td>
+                    <td>{{ entreprise.get_type_entreprise_display }}</td>
+                    <td>{{ entreprise.gerant }}</td>
+                    <td>
+                        <a href="{% url 'entreprise:detail' entreprise.pk %}">Détails</a>
+                        |
+                        <a href="{% url 'entreprise:update' entreprise.pk %}">Modifier</a>
+                        |
+                        <a href="{% url 'entreprise:delete' entreprise.pk %}">Supprimer</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">Aucune entreprise enregistrée.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

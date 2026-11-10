@@ -1,0 +1,65 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Véhicules{% endblock %}
+
+{% block content %}
+<div class="form-page">
+
+    <h1>Gestion des véhicules</h1>
+    <p>Consultez et gérez votre flotte de transport.</p>
+
+    <a href="{% url 'vehicule:create' %}" class="btn-primary">
+        + Ajouter un véhicule
+    </a>
+
+    <div class="form-card">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Immatriculation</th>
+                    <th>Type</th>
+                    <th>Capacité</th>
+                    <th>Entreprise</th>
+                    <th>Disponibilité</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for vehicule in vehicules %}
+                <tr>
+                    <td>{{ vehicule.immatriculation }}</td>
+                    <td>{{ vehicule.get_type_vehicule_display }}</td>
+                    <td>{{ vehicule.capacite_kg }} kg</td>
+                    <td>{{ vehicule.entreprise }}</td>
+
+                    <td>
+                        {% if vehicule.disponible %}
+                            <span class="status-success">Disponible</span>
+                        {% else %}
+                            <span class="status-danger">Indisponible</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a href="{% url 'vehicule:detail' vehicule.pk %}">Détails</a>
+                        |
+                        <a href="{% url 'vehicule:update' vehicule.pk %}">Modifier</a>
+                        |
+                        <a href="{% url 'vehicule:delete' vehicule.pk %}">Supprimer</a>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="6">Aucun véhicule enregistré.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+{% endblock %}

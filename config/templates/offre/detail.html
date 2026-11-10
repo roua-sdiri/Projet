@@ -1,0 +1,47 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Détail offre{% endblock %}
+
+{% block content %}
+<div class="form-page">
+
+    <a href="{% url 'offre:list' %}">← Retour à la liste</a>
+
+    <div class="form-card">
+
+        <h1>Détails de l'offre #{{ offre.pk }}</h1>
+
+        <p><strong>Expédition :</strong>
+            {{ offre.expedition.reference }}</p>
+
+        <p><strong>Transporteur :</strong>
+            {{ offre.transporteur }}</p>
+
+        <p><strong>Véhicule :</strong>
+            {{ offre.vehicule }}</p>
+
+        <p><strong>Prix :</strong>
+            {{ offre.prix }} DT</p>
+
+        <p><strong>Délai :</strong>
+            {{ offre.delai_jours }} jours</p>
+
+        <p><strong>Statut :</strong>
+            {{ offre.get_statut_display }}</p>
+
+        <p><strong>Date de proposition :</strong>
+            {{ offre.date_proposition|date:"d/m/Y" }}</p>
+
+        <p>
+            <a href="{% url 'offre:update' offre.pk %}"
+               class="btn-primary">Modifier</a>
+
+            <a href="{% url 'offre:delete' offre.pk %}">
+                Supprimer
+            </a>
+        </p>
+
+    </div>
+</div>
+{% endblock %}

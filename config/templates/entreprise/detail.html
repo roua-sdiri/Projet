@@ -1,0 +1,47 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Détail entreprise{% endblock %}
+
+{% block content %}
+<div class="form-page">
+
+    <a href="{% url 'entreprise:list' %}">← Retour à la liste</a>
+
+    <div class="form-card">
+
+        <h1>{{ entreprise.raison_sociale }}</h1>
+
+        <p><strong>Matricule fiscal :</strong>
+            {{ entreprise.matricule_fiscal }}</p>
+
+        <p><strong>Adresse :</strong>
+            {{ entreprise.adresse }}</p>
+
+        <p><strong>Type :</strong>
+            {{ entreprise.get_type_entreprise_display }}</p>
+
+        <p><strong>Gérant :</strong>
+            {{ entreprise.gerant }}</p>
+
+        <p><strong>Date de création :</strong>
+            {{ entreprise.created_at|date:"d/m/Y" }}</p>
+
+        <p><strong>Nombre de véhicules :</strong>
+            {{ entreprise.vehicules.count }}</p>
+
+        <p><strong>Nombre d'expéditions :</strong>
+            {{ entreprise.expeditions.count }}</p>
+
+        <p>
+            <a href="{% url 'entreprise:update' entreprise.pk %}"
+               class="btn-primary">Modifier</a>
+
+            <a href="{% url 'entreprise:delete' entreprise.pk %}">
+                Supprimer
+            </a>
+        </p>
+
+    </div>
+</div>
+{% endblock %}

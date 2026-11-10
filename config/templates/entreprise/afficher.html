@@ -1,0 +1,19 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Afficher entreprise{% endblock %}
+
+{% block content %}
+<div class="form-page">
+
+    <div class="form-card">
+        <h1>Bienvenue {{ name }} !</h1>
+        <p>Bienvenue dans la gestion des entreprises TransConnect.</p>
+
+        <a href="{% url 'entreprise:list' %}" class="btn-primary">
+            Voir les entreprises
+        </a>
+    </div>
+
+</div>
+{% endblock %}

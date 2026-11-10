@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Afficher offres{% endblock %}
+
+{% block content %}
+<div class="form-page">
+
+    <div class="form-card">
+
+        <h1>Bienvenue {{ name }} !</h1>
+
+        <p>Bienvenue dans la gestion des offres TransConnect.</p>
+
+        <a href="{% url 'offre:list' %}" class="btn-primary">
+            Voir les offres
+        </a>
+
+    </div>
+
+</div>
+{% endblock %}
