@@ -1,18 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expeditions List</title>
-</head>
-<body>
-    <h1>Expeditions List</h1>
-<ul>
-  {% for expedition in expeditions %}
-    <li><a href="{% url 'detail' expedition.pk%}">
-      {{ expedition.reference }} </a> - {{ expedition.entreprise }} 
-    </li>
-  {% endfor %}
-</ul>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Expédition {{ expedition.reference }}{% endblock %}
+{% block content %}
+<div class="form-page">
+    <a href="{% url 'expedition:list_expeditions' %}">← Retour à la liste</a>
+
+    <h1>{{ expedition.reference }}</h1>
+    <p>
+        {{ expedition.ville_depart }} → {{ expedition.ville_arrivee }}<br>
+        Poids : {{ expedition.poids_kg }} kg<br>
+        Date souhaitée : {{ expedition.date_souhaitee|date:"d/m/Y" }}<br>
+        Statut : {{ expedition.get_statut_display }}<br>
+        Entreprise : {{ expedition.entreprise }}
+    </p>
+    {% if expedition.description %}<p>{{ expedition.description }}</p>{% endif %}
+
+    <p>
+        <a href="{% url 'expedition:update_expedition' expedition.pk %}">Modifier</a> |
+        <a href="{% url 'expedition:supprimer_expedition' expedition.pk %}">Supprimer</a>
+    </p>
+
+    <h2>Offres ({{ offres|length }})</h2>
+    <ul>
+    {% for offre in offres %}
+        <li>{{ offre.transporteur }} — {{ offre.vehicule }} — {{ offre.prix }} — {{ offre.delai_jours }} j — {{ offre.get_statut_display }}</li>
+    {% empty %}
+        <li>Aucune offre pour le moment.</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,18 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expeditions List</title>
-</head>
-<body>
-    <h1>Expeditions List</h1>
-<ul>
-  {% for expedition in expeditions %}
-    <li>
-      {{ expedition.reference }} - {{ expedition.entreprise }} 
-    </li>
-  {% endfor %}
-</ul>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Expéditions{% endblock %}
+{% block content %}
+<div class="form-page">
+    <h1>Expéditions</h1>
+    <p><a href="{% url 'expedition:create_expedition' %}">+ Ajouter une expédition</a></p>
+    <ul>
+    {% for expedition in expeditions %}
+        <li>
+            <a href="{% url 'expedition:detail' expedition.pk %}">{{ expedition.reference }}</a>
+            — {{ expedition.entreprise }} — {{ expedition.ville_depart }} → {{ expedition.ville_arrivee }}
+            — {{ expedition.get_statut_display }}
+        </li>
+    {% empty %}
+        <li>Aucune expédition.</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}
