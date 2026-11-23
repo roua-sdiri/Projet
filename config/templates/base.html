@@ -532,34 +532,35 @@
 
         <p class="menu-title">Menu principal</p>
 
-        <nav>
+    <nav>
 
-            <a href="/expedition/"
-               class="nav-link {% if '/expedition/' in request.path %}active{% endif %}">
-                <span class="nav-icon">📦</span>
-                Expéditions
-            </a>
+        <a href="{% url 'expedition:list_expeditions_root' %}"
+        class="nav-link {% if '/expeditions/' in request.path %}active{% endif %}">
+            <span class="nav-icon">📦</span>
+            Expéditions
+        </a>
 
-            <a href="/entreprise/"
-               class="nav-link {% if '/entreprise/' in request.path %}active{% endif %}">
-                <span class="nav-icon">🏢</span>
-                Entreprises
-            </a>
+        <a href="{% url 'entreprise:list' %}"
+        class="nav-link {% if '/entreprises/' in request.path %}active{% endif %}">
+            <span class="nav-icon">🏢</span>
+            Entreprises
+        </a>
 
-            <a href="/vehicule/"
-               class="nav-link {% if '/vehicule/' in request.path %}active{% endif %}">
-                <span class="nav-icon">🚛</span>
-                Véhicules
-            </a>
+        <a href="{% url 'vehicule:list' %}"
+        class="nav-link {% if '/vehicules/' in request.path %}active{% endif %}">
+            <span class="nav-icon">🚛</span>
+            Véhicules
+        </a>
 
-            <a href="/offre/"
-               class="nav-link {% if '/offre/' in request.path %}active{% endif %}">
-                <span class="nav-icon">📋</span>
-                Offres
-            </a>
+        <a href="{% url 'offre:list' %}"
+        class="nav-link {% if '/offres/' in request.path %}active{% endif %}">
+            <span class="nav-icon">📋</span>
+            Offres
+        </a>
 
-        </nav>
+    </nav>
 
+    
         <div class="sidebar-bottom">
             <p>TransConnect</p>
             <p>Plateforme de gestion de transport</p>

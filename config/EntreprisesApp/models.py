@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator, RegexValidator
 from django.core.exceptions import ValidationError
+from django.conf import settings   
+
 
 def validate_email(value):
     if not value:
@@ -50,3 +52,14 @@ class Entreprise(models.Model):
     gerant = models.OneToOneField(Utilisateur, on_delete=models.CASCADE, related_name='entreprise')
 
     
+class Profile(models.Model):
+    class Role(models.TextChoices):
+        CHARGEUR = 'chargeur', 'Chargeur'
+        TRANSPORTEUR = 'transporteur', 'Transporteur'
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
+    role = models.CharField(max_length=20, choices=Role.choices, default=Role.CHARGEUR)
+    telephone = models.CharField(max_length=20, blank=True)
+
+    def __str__(self):
+        return f'{self.user.get_username()} ({self.get_role_display()})'

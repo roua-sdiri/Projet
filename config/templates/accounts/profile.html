@@ -1,0 +1,45 @@
+{% extends 'accounts/base_auth.html' %}
+{% block title %}Mon profil – TransConnect{% endblock %}
+{% block width %}560px{% endblock %}
+
+{% block extra_css %}
+<style>
+  .head { display:flex; align-items:center; gap:18px; margin-bottom:26px; }
+  .avatar { width:72px; height:72px; border-radius:50%; display:grid; place-items:center; font-size:2rem; font-weight:700;
+            color:#fff; background:linear-gradient(135deg,var(--primary),var(--sky)); }
+  .head h1 { margin:0; font-size:1.4rem; }
+  .role { display:inline-block; margin-top:6px; padding:4px 12px; border-radius:999px; background:#dbeafe;
+          color:var(--primary-dark); font-size:.8rem; font-weight:700; }
+  dl { margin:0 0 26px; }
+  .row { display:flex; justify-content:space-between; gap:16px; padding:13px 0; border-bottom:1px solid var(--border); }
+  dt { color:var(--muted); font-size:.9rem; }
+  dd { margin:0; font-weight:600; text-align:right; }
+  .actions { display:flex; flex-wrap:wrap; gap:10px; }
+  .actions .btn { flex:1; min-width:140px; }
+</style>
+{% endblock %}
+
+{% block content %}
+  <div class="head">
+    <div class="avatar">{{ user.get_username|slice:":1"|upper }}</div>
+    <div>
+      <h1>{% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.get_username }}{% endif %}</h1>
+      <span class="role">{{ profile.get_role_display }}</span>
+    </div>
+  </div>
+
+  <dl>
+    <div class="row"><dt>Nom d’utilisateur</dt><dd>{{ user.get_username }}</dd></div>
+    <div class="row"><dt>Email</dt><dd>{{ user.email|default:"—" }}</dd></div>
+    <div class="row"><dt>Téléphone</dt><dd>{{ profile.telephone|default:"—" }}</dd></div>
+    <div class="row"><dt>Rôle</dt><dd>{{ profile.get_role_display }}</dd></div>
+    <div class="row"><dt>Membre depuis</dt><dd>{{ user.date_joined|date:"d/m/Y" }}</dd></div>
+  </dl>
+
+  <div class="actions">
+    <a href="{% url 'profile_edit' %}" class="btn btn-primary">Modifier le profil</a>
+    <a href="{% url 'profile_delete' %}" class="btn btn-outline">Supprimer le compte</a>
+  </div>
+
+  <div class="links"><a href="{% url 'home' %}">← Retour à l’accueil</a></div>
+{% endblock %}

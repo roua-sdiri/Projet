@@ -1,0 +1,16 @@
+{% extends 'accounts/base_auth.html' %}
+{% block title %}Inscription – TransConnect{% endblock %}
+{% block width %}560px{% endblock %}
+
+{% block content %}
+  <h1>Créer un compte</h1>
+  <p class="subtitle">Rejoignez TransConnect et choisissez votre rôle.</p>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'accounts/_form_fields.html' %}
+    <button type="submit" class="btn btn-primary btn-block">S’inscrire</button>
+  </form>
+
+  <div class="links">Déjà un compte ? <a href="{% url 'login' %}">Se connecter</a></div>
+{% endblock %}

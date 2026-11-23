@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from VehiculesApp.models import Vehicule
 from .models import Entreprise, Utilisateur
-
 admin.site.site_header = "TransConnect — Administration"
 admin.site.site_title = "TransConnect"
 admin.site.index_title = "Espace de pilotage des opérations"
@@ -45,3 +44,6 @@ class UtilisateurAdmin(UserAdmin):
     add_fieldsets = UserAdmin.add_fieldsets + (
         ("Infos supplémentaires", {"fields": ("email", "telephone", "role")}),
     )
+
+from .models import Profile
+admin.site.register(Profile)

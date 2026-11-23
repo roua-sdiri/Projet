@@ -15,7 +15,7 @@ def home(request):
 
 
 def afficher(request, name):
-    return render(request, 'expeditions/afficher.html', {'name': name})
+    return render(request, 'expedition/afficher.html', {'name': name})
 
 #option 1: Using function
 def listExpeditions(request):
@@ -23,16 +23,16 @@ def listExpeditions(request):
     expeditions = (Expedition.objects
                    .select_related('entreprise')
                    .order_by('-created_at'))
-    return render(request, 'expeditions/list.html', {'expeditions': expeditions})
+    return render(request, 'expedition/liste.html', {'expeditions': expeditions})
 #option 2: Using view
 class ExpeditionListView(ListView):
     model = Expedition
-    template_name = 'expeditions/list.html'
+    template_name = 'expedition/liste.html'
     context_object_name = 'expeditions'
 #option 1 using view 
 class ExpeditionDetailView(DetailView):
     model = Expedition
-    template_name = 'expeditions/detail.html'
+    template_name = 'expedition/detail.html'
     context_object_name = 'expeditions'
 #option 2 using function
 def detailExpedition(request, id):
@@ -41,7 +41,7 @@ def detailExpedition(request, id):
               .filter(expedition=expedition)
               .select_related('transporteur', 'vehicule')
               .order_by('-date_proposition'))
-    return render(request, 'expeditions/detail.html',
+    return render(request, 'expedition/detail.html',
                   {'expedition': expedition, 'offres': offres})
 class ExpeditionDeleteView(DeleteView):
     model = Expedition
@@ -49,11 +49,11 @@ class ExpeditionDeleteView(DeleteView):
     success_url = reverse_lazy('expedition:list_expeditions')
 class ExpeditionCreateView(CreateView):
     model = Expedition
-    template_name = 'expeditions/create.html'
+    template_name = 'expedition/create.html'
     form_class = ExpeditionForm
     success_url = reverse_lazy('expedition:list_expeditions')
 class ExpeditionUpdateView(UpdateView):
     model = Expedition
-    template_name = 'expeditions/create.html'
+    template_name = 'expedition/create.html'
     form_class = ExpeditionForm
     success_url = reverse_lazy('expedition:list_expeditions')

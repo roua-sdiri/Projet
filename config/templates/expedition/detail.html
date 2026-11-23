@@ -1,31 +1,61 @@
 {% extends 'base.html' %}
+
 {% block title %}Expédition {{ expedition.reference }}{% endblock %}
+
 {% block content %}
 <div class="form-page">
+
     <a href="{% url 'expedition:list_expeditions' %}">← Retour à la liste</a>
 
-    <h1>{{ expedition.reference }}</h1>
-    <p>
-        {{ expedition.ville_depart }} → {{ expedition.ville_arrivee }}<br>
-        Poids : {{ expedition.poids_kg }} kg<br>
-        Date souhaitée : {{ expedition.date_souhaitee|date:"d/m/Y" }}<br>
-        Statut : {{ expedition.get_statut_display }}<br>
-        Entreprise : {{ expedition.entreprise }}
-    </p>
-    {% if expedition.description %}<p>{{ expedition.description }}</p>{% endif %}
+    <div class="form-card">
 
-    <p>
-        <a href="{% url 'expedition:update_expedition' expedition.pk %}">Modifier</a> |
-        <a href="{% url 'expedition:supprimer_expedition' expedition.pk %}">Supprimer</a>
-    </p>
+        <h1>Détails de l'expédition {{ expedition.reference }}</h1>
 
-    <h2>Offres ({{ offres|length }})</h2>
-    <ul>
-    {% for offre in offres %}
-        <li>{{ offre.transporteur }} — {{ offre.vehicule }} — {{ offre.prix }} — {{ offre.delai_jours }} j — {{ offre.get_statut_display }}</li>
-    {% empty %}
-        <li>Aucune offre pour le moment.</li>
-    {% endfor %}
-    </ul>
+        <p><strong>Entreprise :</strong> {{ expedition.entreprise }}</p>
+        <p><strong>Trajet :</strong> {{ expedition.ville_depart }} → {{ expedition.ville_arrivee }}</p>
+        <p><strong>Poids :</strong> {{ expedition.poids_kg }} kg</p>
+        <p><strong>Date souhaitée :</strong> {{ expedition.date_souhaitee|date:"d/m/Y" }}</p>
+        <p><strong>Statut :</strong> {{ expedition.get_statut_display }}</p>
+        {% if expedition.description %}
+        <p><strong>Description :</strong> {{ expedition.description }}</p>
+        {% endif %}
+
+        <p>
+            <a href="{% url 'expedition:update_expedition' expedition.pk %}" class="btn-primary">Modifier</a>
+            <a href="{% url 'expedition:supprimer_expedition' expedition.pk %}">Supprimer</a>
+        </p>
+
+    </div>
+
+    <div class="form-card">
+        <h2>Offres ({{ offres|length }})</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Transporteur</th>
+                    <th>Véhicule</th>
+                    <th>Prix</th>
+                    <th>Délai</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for offre in offres %}
+                <tr>
+                    <td>{{ offre.transporteur }}</td>
+                    <td>{{ offre.vehicule }}</td>
+                    <td>{{ offre.prix }} DT</td>
+                    <td>{{ offre.delai_jours }} jours</td>
+                    <td>{{ offre.get_statut_display }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">Aucune offre pour le moment.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </div>
 {% endblock %}

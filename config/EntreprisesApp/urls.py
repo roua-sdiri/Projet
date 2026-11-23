@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (EntrepriseListView, EntrepriseDetailView, EntrepriseCreateView,
-                    EntrepriseUpdateView, EntrepriseDeleteView)
+                    EntrepriseUpdateView, EntrepriseDeleteView, EntrepriseLoginView)
 
 app_name = 'entreprise'
 urlpatterns = [
@@ -9,4 +9,5 @@ urlpatterns = [
     path('<int:pk>/', EntrepriseDetailView.as_view(), name='detail'),
     path('<int:pk>/modifier/', EntrepriseUpdateView.as_view(), name='update'),
     path('<int:pk>/supprimer/', EntrepriseDeleteView.as_view(), name='delete'),
+    path('login/', EntrepriseLoginView.as_view(), name='login'),
 ]

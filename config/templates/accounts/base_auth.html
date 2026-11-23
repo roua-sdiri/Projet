@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}TransConnect{% endblock %}</title>
+  <style>
+    :root { --navy:#0b1b3f; --primary:#2563eb; --primary-dark:#1d4ed8; --sky:#38bdf8;
+            --text:#0f172a; --muted:#64748b; --border:#e2e8f0; --danger:#b91c1c; --ok:#15803d; }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; font-family:"Segoe UI",system-ui,sans-serif; color:var(--text);
+           background: radial-gradient(circle at 85% 10%, rgba(56,189,248,.25), transparent 40%),
+                       linear-gradient(135deg,#0b1b3f 0%,#1e3a8a 55%,#2563eb 100%);
+           display:flex; flex-direction:column; align-items:center; padding:24px; }
+    a { text-decoration:none; color:var(--primary); }
+    .logo { display:flex; align-items:center; gap:10px; margin:10px 0 24px; color:#fff; font-size:1.4rem; font-weight:800; }
+    .logo span { color:var(--sky); }
+    .logo svg { width:36px; height:36px; }
+    .card { width:100%; max-width:{% block width %}460px{% endblock %}; background:#fff; border-radius:20px;
+            padding:36px 34px; box-shadow:0 25px 60px rgba(0,0,0,.3); }
+    .card h1 { margin:0 0 6px; font-size:1.65rem; }
+    .subtitle { margin:0 0 24px; color:var(--muted); line-height:1.5; }
+
+    .field { margin-bottom:16px; }
+    label { display:block; margin-bottom:6px; font-size:.86rem; font-weight:600; }
+    input[type=text], input[type=password], input[type=email], select {
+      width:100%; padding:11px 14px; font-size:1rem; border:1.5px solid var(--border);
+      border-radius:10px; background:#f8fafc; transition:.15s; }
+    input:focus, select:focus { outline:none; background:#fff; border-color:var(--primary); box-shadow:0 0 0 4px rgba(37,99,235,.15); }
+    .help { margin-top:6px; color:var(--muted); font-size:.78rem; line-height:1.5; }
+    .help ul { margin:4px 0 0; padding-left:18px; }
+    .field-error { margin-top:6px; color:var(--danger); font-size:.82rem; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+    .btn { display:inline-block; padding:12px 22px; border:0; border-radius:10px; font-size:.97rem;
+           font-weight:600; cursor:pointer; text-align:center; transition:.15s; }
+    .btn-block { width:100%; }
+    .btn-primary { background:linear-gradient(135deg,var(--primary),var(--primary-dark)); color:#fff; box-shadow:0 8px 18px rgba(37,99,235,.3); }
+    .btn-outline { background:#fff; border:1.5px solid var(--border); color:var(--text); }
+    .btn-outline:hover { border-color:var(--primary); color:var(--primary); }
+    .btn-danger { background:#dc2626; color:#fff; }
+    .btn-danger:hover { background:#b91c1c; }
+    .links { margin-top:20px; text-align:center; font-size:.9rem; color:var(--muted); }
+    .links a { font-weight:600; }
+
+    .msg { margin-bottom:16px; padding:12px 14px; border-radius:10px; font-size:.9rem; }
+    .msg.success { background:#f0fdf4; border:1px solid #bbf7d0; color:var(--ok); }
+    .msg.error, .msg.warning { background:#fef2f2; border:1px solid #fecaca; color:var(--danger); }
+    .msg.info { background:#eff6ff; border:1px solid #bfdbfe; color:var(--primary-dark); }
+    .errors { margin-bottom:16px; padding:12px 14px; background:#fef2f2; border:1px solid #fecaca;
+              border-left:4px solid var(--danger); border-radius:10px; color:var(--danger); font-size:.9rem; }
+
+    @media (max-width:560px) { .grid2 { grid-template-columns:1fr; } .card { padding:28px 22px; } }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <a href="{% url 'home' %}" class="logo">
+    <svg viewBox="0 0 40 40" fill="none">
+      <rect width="40" height="40" rx="11" fill="#2563eb"/>
+      <path d="M8 24h16V13H8v11zm16-8h5l4 4v4h-9v-8z" fill="#fff"/>
+      <circle cx="14" cy="27" r="3" fill="#38bdf8" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="28" cy="27" r="3" fill="#38bdf8" stroke="#2563eb" stroke-width="1.5"/>
+    </svg>
+    Trans<span>Connect</span>
+  </a>
+
+  <main class="card">
+    {% for message in messages %}
+      <div class="msg {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

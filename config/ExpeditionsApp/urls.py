@@ -24,5 +24,6 @@ urlpatterns = [
     path('<int:pk>/detailview/', ExpeditionDetailView.as_view(), name='detail_expedition_view'),
     path('create/', ExpeditionCreateView.as_view(), name='create_expedition'),
     path('<int:pk>/update/', ExpeditionUpdateView.as_view(), name='update_expedition'),
+    path('', ExpeditionListView.as_view(), name='list_expeditions_root'),
 
 ]

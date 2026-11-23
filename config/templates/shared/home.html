@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TransConnect – Plateforme de transport et logistique</title>
+  <style>
+    :root {
+      --navy: #0b1b3f; --primary: #2563eb; --primary-dark: #1d4ed8;
+      --sky: #38bdf8; --accent: #f59e0b;
+      --text: #0f172a; --muted: #64748b; --bg: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; color: var(--text); background: var(--bg); }
+    a { text-decoration: none; }
+    form { margin: 0; }
+
+    /* ---------- Navbar ---------- */
+    .nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 6vw; background: rgba(11, 27, 63, .92); backdrop-filter: blur(8px);
+    }
+    .logo { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 1.35rem; font-weight: 800; letter-spacing: -.3px; }
+    .logo span { color: var(--sky); }
+    .logo svg { width: 34px; height: 34px; }
+    .menu { display: flex; align-items: center; gap: 26px; }
+    .menu a.link { color: #cbd5e1; font-size: .95rem; font-weight: 500; transition: color .15s; }
+    .menu a.link:hover { color: #fff; }
+    .user-chip {
+      display: flex; align-items: center; gap: 8px; color: #e2e8f0; font-size: .92rem;
+      padding: 6px 12px 6px 6px; border-radius: 999px; background: rgba(255,255,255,.08);
+    }
+    .avatar {
+      width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--primary), var(--sky)); color: #fff; font-weight: 700; font-size: .85rem;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px;
+      border: 0; border-radius: 10px; font-size: .95rem; font-weight: 600; cursor: pointer;
+      transition: transform .1s, box-shadow .15s, background .15s;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; box-shadow: 0 8px 20px rgba(37,99,235,.4); }
+    .btn-primary:hover { box-shadow: 0 10px 26px rgba(37,99,235,.55); }
+    .btn-light { background: #fff; color: var(--navy); }
+    .btn-light:hover { background: #e0f2fe; }
+    .btn-ghost { background: rgba(255,255,255,.1); color: #fff; border: 1.5px solid rgba(255,255,255,.35); }
+    .btn-ghost:hover { background: rgba(255,255,255,.2); }
+    .btn-logout { background: rgba(239,68,68,.15); color: #fecaca; border: 1.5px solid rgba(239,68,68,.5); padding: 8px 16px; }
+    .btn-logout:hover { background: rgba(239,68,68,.3); color: #fff; }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative; overflow: hidden; color: #fff;
+      padding: 110px 6vw 150px;
+      background: radial-gradient(circle at 80% 20%, rgba(56,189,248,.35), transparent 45%),
+                  linear-gradient(135deg, #0b1b3f 0%, #1e3a8a 55%, #2563eb 100%);
+    }
+    .hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; background: rgba(255,255,255,.05); }
+    .hero::before { width: 420px; height: 420px; top: -140px; left: -120px; }
+    .hero::after  { width: 300px; height: 300px; bottom: -120px; right: 10%; }
+    .hero-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
+    .badge {
+      display: inline-block; padding: 6px 14px; margin-bottom: 20px; border-radius: 999px;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); font-size: .82rem; font-weight: 600; color: #bae6fd;
+    }
+    .hero h1 { margin: 0 0 18px; font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.08; letter-spacing: -1px; }
+    .hero h1 em { font-style: normal; color: var(--sky); }
+    .hero p.lead { margin: 0 0 32px; max-width: 540px; font-size: 1.1rem; line-height: 1.7; color: #cbd5e1; }
+    .actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+    .hero-art { display: grid; place-items: center; }
+    .hero-art .panel {
+      width: 100%; max-width: 380px; padding: 28px; border-radius: 22px;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2);
+      backdrop-filter: blur(10px); box-shadow: 0 30px 60px rgba(0,0,0,.25);
+    }
+    .route { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--sky); box-shadow: 0 0 0 5px rgba(56,189,248,.25); }
+    .dot.end { background: var(--accent); box-shadow: 0 0 0 5px rgba(245,158,11,.25); }
+    .line { flex: 1; height: 2px; background: repeating-linear-gradient(90deg, rgba(255,255,255,.6) 0 8px, transparent 8px 14px); }
+    .panel h3 { margin: 0 0 4px; font-size: 1.05rem; }
+    .panel small { color: #bae6fd; }
+    .progress { margin: 16px 0 6px; height: 8px; border-radius: 99px; background: rgba(255,255,255,.15); overflow: hidden; }
+    .progress i { display: block; width: 68%; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--sky), var(--primary)); }
+    .panel .meta { display: flex; justify-content: space-between; font-size: .8rem; color: #cbd5e1; }
+    .truck { display: block; width: 100%; margin-top: 18px; }
+
+    /* ---------- Stats ---------- */
+    .stats {
+      position: relative; z-index: 2; max-width: 980px; margin: -70px auto 0; padding: 0 20px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    }
+    .stats-box { display: contents; }
+    .stat { background: #fff; padding: 26px 16px; text-align: center; box-shadow: 0 18px 40px rgba(15,23,42,.1); }
+    .stat:first-child { border-radius: 16px 0 0 16px; }
+    .stat:last-child { border-radius: 0 16px 16px 0; }
+    .stat b { display: block; font-size: 1.9rem; color: var(--primary); }
+    .stat span { color: var(--muted); font-size: .88rem; }
+
+    /* ---------- Services ---------- */
+    section.block { max-width: 1100px; margin: 0 auto; padding: 90px 6vw 20px; }
+    .block h2 { margin: 0 0 8px; text-align: center; font-size: 2rem; letter-spacing: -.5px; }
+    .block .sub { margin: 0 auto 44px; text-align: center; max-width: 560px; color: var(--muted); line-height: 1.6; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 22px; }
+    .card {
+      display: block; padding: 28px; border-radius: 18px; background: #fff; color: inherit;
+      border: 1px solid #e2e8f0; transition: transform .2s, box-shadow .2s, border-color .2s;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(37,99,235,.15); border-color: #bfdbfe; }
+    .icon {
+      width: 54px; height: 54px; margin-bottom: 18px; border-radius: 14px; display: grid; place-items: center; font-size: 1.6rem;
+      background: linear-gradient(135deg, #dbeafe, #e0f2fe);
+    }
+    .card h3 { margin: 0 0 8px; font-size: 1.15rem; }
+    .card p { margin: 0 0 14px; color: var(--muted); line-height: 1.6; font-size: .95rem; }
+    .card .more { color: var(--primary); font-weight: 600; font-size: .9rem; }
+
+    /* ---------- CTA ---------- */
+    .cta {
+      max-width: 1100px; margin: 80px auto 0; padding: 54px 6vw; border-radius: 24px; text-align: center; color: #fff;
+      background: linear-gradient(135deg, #0b1b3f, #2563eb);
+    }
+    .cta h2 { margin: 0 0 10px; font-size: 1.8rem; }
+    .cta p { margin: 0 0 26px; color: #cbd5e1; }
+    .cta-wrap { padding: 0 20px; }
+
+    footer { margin-top: 70px; padding: 30px 6vw; text-align: center; color: var(--muted); font-size: .9rem; border-top: 1px solid #e2e8f0; }
+
+    @media (max-width: 860px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-art { display: none; }
+      .hero { padding: 80px 6vw 130px; }
+      .stats { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .stat, .stat:first-child, .stat:last-child { border-radius: 14px; }
+      .menu a.link { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Navbar ===== -->
+  <header class="nav">
+    <a href="{% url 'home' %}" class="logo">
+      <svg viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" rx="11" fill="#2563eb"/>
+        <path d="M8 24h16V13H8v11zm16-8h5l4 4v4h-9v-8z" fill="#fff"/>
+        <circle cx="14" cy="27" r="3" fill="#38bdf8" stroke="#2563eb" stroke-width="1.5"/>
+        <circle cx="28" cy="27" r="3" fill="#38bdf8" stroke="#2563eb" stroke-width="1.5"/>
+      </svg>
+      Trans<span>Connect</span>
+    </a>
+
+    <nav class="menu">
+      <a class="link" href="/entreprises/">Entreprises</a>
+      <a class="link" href="/expeditions/">Expéditions</a>
+      <a class="link" href="/vehicules/">Véhicules</a>
+      <a class="link" href="/offres/">Offres</a>
+
+    {% if user.is_authenticated %}
+    <a href="{% url 'profile' %}" class="user-chip">
+        <span class="avatar">{{ user.get_username|slice:":1"|upper }}</span>
+        {{ user.get_username }}
+    </a>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-logout">Déconnexion</button>
+    </form>
+    {% else %}
+    <a href="{% url 'register' %}" class="link">Inscription</a>
+    <a href="{% url 'login' %}" class="btn btn-primary">Connexion</a>
+    {% endif %}
+    </nav>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <span class="badge">🚚 Plateforme de transport et logistique</span>
+        <h1>Connectez vos <em>expéditions</em> au bon transporteur.</h1>
+        <p class="lead">
+          TransConnect met en relation entreprises, véhicules et offres de transport.
+          Suivez vos expéditions et gérez votre flotte depuis un seul espace.
+        </p>
+        <div class="actions">
+          {% if user.is_authenticated %}
+            <a href="/expeditions/" class="btn btn-light">Mes expéditions →</a>
+            <a href="/entreprises/" class="btn btn-ghost">Voir les entreprises</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-light">Se connecter →</a>
+            <a href="#services" class="btn btn-ghost">Découvrir les services</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="hero-art">
+        <div class="panel">
+          <div class="route"><span class="dot"></span><span class="line"></span><span class="dot end"></span></div>
+          <h3>Tunis → Sfax</h3>
+          <small>Expédition en cours</small>
+          <div class="progress"><i></i></div>
+          <div class="meta"><span>68 % du trajet</span><span>Arrivée estimée : 16h30</span></div>
+          <svg class="truck" viewBox="0 0 300 90" fill="none">
+            <rect x="10" y="14" width="150" height="52" rx="8" fill="#fff" fill-opacity=".9"/>
+            <path d="M160 28h60l30 24v14h-90V28z" fill="#38bdf8"/>
+            <path d="M172 36h42l16 14h-58V36z" fill="#0b1b3f" fill-opacity=".55"/>
+            <circle cx="55" cy="70" r="14" fill="#0b1b3f" stroke="#fff" stroke-width="4"/>
+            <circle cx="200" cy="70" r="14" fill="#0b1b3f" stroke="#fff" stroke-width="4"/>
+            <path d="M0 86h300" stroke="#fff" stroke-opacity=".3" stroke-width="2" stroke-dasharray="10 8"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Stats ===== -->
+  <div class="stats">
+    <div class="stat"><b>24/7</b><span>Suivi des expéditions</span></div>
+    <div class="stat"><b>100 %</b><span>Entreprises vérifiées</span></div>
+    <div class="stat"><b>+</b><span>Véhicules disponibles</span></div>
+    <div class="stat"><b>1 clic</b><span>Pour publier une offre</span></div>
+  </div>
+
+  <!-- ===== Services ===== -->
+  <section class="block" id="services">
+    <h2>Tout votre transport au même endroit</h2>
+    <p class="sub">Quatre modules reliés entre eux pour gérer l'activité de bout en bout.</p>
+    <div class="cards">
+      <a class="card" href="/entreprises/">
+        <div class="icon">🏢</div>
+        <h3>Entreprises</h3>
+        <p>Gérez les sociétés partenaires, leurs matricules fiscaux et leurs gérants.</p>
+        <span class="more">Accéder →</span>
+      </a>
+      <a class="card" href="/expeditions/">
+        <div class="icon">📦</div>
+        <h3>Expéditions</h3>
+        <p>Créez et suivez chaque envoi, du départ jusqu'à la livraison.</p>
+        <span class="more">Accéder →</span>
+      </a>
+      <a class="card" href="/vehicules/">
+        <div class="icon">🚛</div>
+        <h3>Véhicules</h3>
+        <p>Consultez la flotte, la disponibilité et la capacité de chaque véhicule.</p>
+        <span class="more">Accéder →</span>
+      </a>
+      <a class="card" href="/offres/">
+        <div class="icon">💼</div>
+        <h3>Offres</h3>
+        <p>Publiez des offres de transport et trouvez la meilleure correspondance.</p>
+        <span class="more">Accéder →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <div class="cta-wrap">
+    <section class="cta">
+      {% if user.is_authenticated %}
+        <h2>Content de vous revoir, {{ user.get_username }} 👋</h2>
+        <p>Retrouvez vos expéditions et vos offres en un clic.</p>
+        <a href="/expeditions/" class="btn btn-light">Ouvrir mon espace →</a>
+      {% else %}
+        <h2>Prêt à connecter vos expéditions ?</h2>
+        <p>Connectez-vous pour accéder à votre espace TransConnect.</p>
+        <a href="{% url 'login' %}" class="btn btn-light">Connexion →</a>
+      {% endif %}
+    </section>
+  </div>
+
+  <footer>© {% now "Y" %} TransConnect – Tous droits réservés</footer>
+</body>
+</html>

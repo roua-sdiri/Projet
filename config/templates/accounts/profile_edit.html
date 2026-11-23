@@ -1,0 +1,17 @@
+{% extends 'accounts/base_auth.html' %}
+{% block title %}Modifier le profil – TransConnect{% endblock %}
+{% block width %}560px{% endblock %}
+
+{% block content %}
+  <h1>Modifier mon profil</h1>
+  <p class="subtitle">Mettez à jour vos informations personnelles.</p>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'accounts/_form_fields.html' with form=user_form %}
+    {% include 'accounts/_form_fields.html' with form=profile_form %}
+    <button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
+  </form>
+
+  <div class="links"><a href="{% url 'profile' %}">← Annuler</a></div>
+{% endblock %}

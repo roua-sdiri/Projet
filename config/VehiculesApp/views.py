@@ -6,14 +6,14 @@ from .forms import VehiculeForm
 
 class VehiculeListView(ListView):
     model = Vehicule
-    template_name = 'vehicules/list.html'
+    template_name = 'vehicule/liste.html'
     context_object_name = 'vehicules'
     queryset = Vehicule.objects.select_related('entreprise').order_by('-created_at')
 
 
 class VehiculeDetailView(DetailView):
     model = Vehicule
-    template_name = 'vehicules/detail.html'
+    template_name = 'vehicule/detail.html'
     context_object_name = 'vehicule'
 
 

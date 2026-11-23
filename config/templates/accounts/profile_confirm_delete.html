@@ -1,0 +1,18 @@
+{% extends 'accounts/base_auth.html' %}
+{% block title %}Supprimer le compte – TransConnect{% endblock %}
+
+{% block content %}
+  <h1>Supprimer mon compte</h1>
+  <p class="subtitle">
+    Cette action est <strong>définitive</strong>. Votre compte <strong>{{ user.get_username }}</strong>
+    et les données qui lui sont liées seront supprimés.
+  </p>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="grid2">
+      <a href="{% url 'profile' %}" class="btn btn-outline">Annuler</a>
+      <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+    </div>
+  </form>
+{% endblock %}

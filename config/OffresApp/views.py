@@ -6,14 +6,14 @@ from .forms import OffreForm
 
 class OffreListView(ListView):
     model = Offre
-    template_name = 'offres/list.html'
+    template_name = 'offre/liste.html'
     context_object_name = 'offres'
     queryset = Offre.objects.select_related('expedition', 'transporteur', 'vehicule').order_by('-created_at')
 
 
 class OffreDetailView(DetailView):
     model = Offre
-    template_name = 'offres/detail.html'
+    template_name = 'offre/detail.html'
     context_object_name = 'offre'
 
 

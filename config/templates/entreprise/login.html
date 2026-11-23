@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Connexion{% if entreprise %} – {{ entreprise }}{% endif %}</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #b91c1c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      color: var(--text); background: #f8fafc;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+
+    .wrapper {
+      display: grid; grid-template-columns: 1fr 1fr;
+      width: 100%; max-width: 920px; min-height: 540px;
+      background: #fff; border-radius: 20px; overflow: hidden;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, .12);
+    }
+
+    /* Left brand panel */
+    .brand {
+      position: relative; padding: 48px 40px; color: #fff;
+      display: flex; flex-direction: column; justify-content: space-between;
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #38bdf8 100%);
+      overflow: hidden;
+    }
+    .brand::before, .brand::after {
+      content: ""; position: absolute; border-radius: 50%;
+      background: rgba(255, 255, 255, .08);
+    }
+    .brand::before { width: 260px; height: 260px; top: -80px; right: -80px; }
+    .brand::after  { width: 200px; height: 200px; bottom: -60px; left: -60px; }
+    .brand > * { position: relative; z-index: 1; }
+    .logo {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: rgba(255, 255, 255, .18);
+      display: grid; place-items: center; font-size: 1.5rem; font-weight: 700;
+      backdrop-filter: blur(4px);
+    }
+    .brand h2 { margin: 0 0 10px; font-size: 1.8rem; line-height: 1.2; }
+    .brand p  { margin: 0; opacity: .85; line-height: 1.6; }
+    .brand small { opacity: .7; }
+
+    /* Right form panel */
+    .panel { padding: 48px 40px; display: flex; flex-direction: column; justify-content: center; }
+    .panel h1 { margin: 0 0 6px; font-size: 1.75rem; }
+    .subtitle { margin: 0 0 28px; color: var(--muted); }
+    .subtitle strong { color: var(--text); }
+
+    .field { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 6px; font-size: .875rem; font-weight: 600; }
+    input[type="text"], input[type="password"], input[type="email"] {
+      width: 100%; padding: 12px 14px; font-size: 1rem;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      background: #f8fafc; transition: border-color .15s, box-shadow .15s, background .15s;
+    }
+    input:hover { border-color: #cbd5e1; }
+    input:focus {
+      outline: none; background: #fff; border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .15);
+    }
+    .field-error { margin-top: 6px; color: var(--danger); font-size: .82rem; }
+
+    .errors {
+      display: flex; gap: 8px; align-items: flex-start;
+      margin-bottom: 20px; padding: 12px 14px;
+      background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid var(--danger);
+      border-radius: 10px; color: var(--danger); font-size: .9rem;
+    }
+
+    .password-wrap { position: relative; }
+    .toggle {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      width: auto; padding: 4px 8px; border: 0; background: transparent;
+      color: var(--muted); font-size: .8rem; font-weight: 600; cursor: pointer;
+    }
+    .toggle:hover { color: var(--primary); background: transparent; }
+
+    .submit {
+      width: 100%; margin-top: 6px; padding: 13px;
+      border: 0; border-radius: 10px; cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff; font-size: 1rem; font-weight: 600;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, .3);
+      transition: transform .1s, box-shadow .15s;
+    }
+    .submit:hover { box-shadow: 0 10px 22px rgba(37, 99, 235, .4); }
+    .submit:active { transform: translateY(1px); }
+
+    .back {
+      display: inline-block; margin-top: 22px; color: var(--muted);
+      font-size: .9rem; text-decoration: none;
+    }
+    .back:hover { color: var(--primary); }
+
+    @media (max-width: 760px) {
+      .wrapper { grid-template-columns: 1fr; min-height: auto; }
+      .brand { display: none; }
+      .panel { padding: 36px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <aside class="brand">
+      <h2>Bienvenue sur<br>TransConnect</h2>
+      <div class="logo">{{ entreprise.raison_sociale|default:"E"|slice:":1"|upper }}</div>
+      <div>
+        <h2>Bienvenue{% if entreprise %}<br>{{ entreprise.raison_sociale }}{% endif %}</h2>
+        <p>Gérez vos expéditions, vos véhicules et vos offres depuis un seul espace.</p>
+      </div>
+      <small>© {% now "Y" %} – Tous droits réservés</small>
+    </aside>
+
+    <main class="panel">
+      <h1>Connexion</h1>
+      <p class="subtitle">
+        {% if entreprise %}Espace de <strong>{{ entreprise }}</strong>{% else %}Accédez à votre espace{% endif %}
+      </p>
+
+      {% if form.non_field_errors %}
+        <div class="errors" role="alert">
+          <div>{% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</div>
+        </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% for field in form %}
+          <div class="field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {% if field.field.widget.input_type == "password" %}
+              <div class="password-wrap">
+                {{ field }}
+                <button type="button" class="toggle" onclick="togglePassword('{{ field.id_for_label }}', this)">Afficher</button>
+              </div>
+            {% else %}
+              {{ field }}
+            {% endif %}
+            {% for error in field.errors %}
+              <div class="field-error">{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+
+        <button type="submit" class="submit">Se connecter</button>
+      </form>
+      <p style="margin-top:18px;font-size:.9rem;">
+        <a href="{% url 'password_reset' %}">Mot de passe oublié ?</a> ·
+        <a href="{% url 'register' %}">Créer un compte</a>
+      </p>
+
+      <a class="back" href="{% url 'entreprise:list' %}">← Retour à la liste des entreprises</a>
+    </main>
+  </div>
+
+  <script>
+    function togglePassword(id, btn) {
+      const input = document.getElementById(id);
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      btn.textContent = show ? "Masquer" : "Afficher";
+    }
+  </script>
+</body>
+</html>
